@@ -121,13 +121,24 @@ st.pyplot(fig)
 from sklearn.metrics import roc_curve, auc
 from itertools import cycle
 
+# Определение меток классов
+class_labels = {
+    0: 'Класс 0',
+    1: 'Класс 1',
+    2: 'Класс 2',
+    3: 'Класс 3',
+    4: 'Класс 4',
+    5: 'Класс 5',
+    6: 'Класс 6'
+}
+
 st.write("### ROC-кривые для каждой категории ожирения")
 
 # Получение вероятностей предсказаний
 y_score = knn.predict_proba(X_test)
 
 # Определение уникальных классов
-n_classes = len(np.unique(y_test))
+n_classes = 7  # Изменено на 7
 colors = cycle(["aqua", "darkorange", "cornflowerblue", "red", "green", "purple", "brown"])
 
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -147,6 +158,7 @@ ax.set_title('ROC-кривые')
 ax.legend(loc="lower right")
 
 st.pyplot(fig)
+
 
 
 
