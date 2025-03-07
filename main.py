@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
+import io
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 from sklearn.metrics import roc_curve, auc
@@ -48,40 +49,28 @@ data= load_data("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw
 st.write("### Данные до изменения")
 st.dataframe(data.head())
 
-import streamlit as st
-import pandas as pd
-import io
-
-# Основная информация о датасете
 st.write("## Основная информация о датасете")
-
 buffer = io.StringIO()
 data.info(buf=buffer)
 info_str = buffer.getvalue()
 st.text(info_str)
 
-# Вывод формы (размерности) данных
 st.write(f"### Размерность данных: {data.shape[0]} строк, {data.shape[1]} колонок")
 
-# Подсчёт пропущенных значений
 st.write("### Количество пропущенных значений в каждом столбце")
 st.dataframe(data.isna().sum().reset_index().rename(columns={"index": "Столбец", 0: "Пропущенные значения"}))
 
-# Уникальные значения в каждом столбце
 st.write("### Количество уникальных значений в каждом столбце")
 st.dataframe(data.nunique().reset_index().rename(columns={"index": "Столбец", 0: "Уникальные значения"}))
 
-# Уникальные значения в колонке "Obesity"
 st.write("### Уникальные классы в 'Obesity'")
-st.write(", ".join(map(str, data["Obesity"].unique())))
+st.markdown("\n".join(f"- {col}" for col in data["Obesity"].unique()))
 
-# Описание статистики данных
 st.write("### Описательная статистика данных")
 st.dataframe(data.describe())
 
-# Список колонок
 st.write("### Список колонок в датасете")
-st.write(", ".join(data.columns))
+st.markdown("\n".join(f"- {col}" for col in data.columns))
 
 
 
