@@ -75,8 +75,16 @@ knn = load_model()
 
 # Важность признаков
 st.write("### Важность признаков для модели KNN")
-st.image("https://raw.githubusercontent.com/AMIROLIMI/Data_Science_fanalproj_module1/main/feature_imp.png", 
-         use_container_width=True)
+result = permutation_importance(knn, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1)
+importance = result.importances_mean
+feature_importance = pd.DataFrame({'Feature': X.columns, 'Importance': importance}).sort_values(by='Importance', ascending=True)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.barh(feature_importance['Feature'], feature_importance['Importance'], color='skyblue')
+ax.set_xlabel('Важность признаков')
+ax.set_ylabel('Признаки')
+ax.set_title('Важность признаков для модели KNN')
+st.pyplot(fig)
 
 # Матрица ошибок
 st.write("### Матрица ошибок")
