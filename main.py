@@ -7,6 +7,7 @@ import joblib
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.inspection import permutation_importance
+from sklearn.metrics import confusion_matrix, classification_report
 import urllib.request
 
 st.title("Классификация ожирения")
