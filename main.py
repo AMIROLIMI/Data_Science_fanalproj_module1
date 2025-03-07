@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
+from sklearn.metrics import roc_curve, auc
+from itertools import cycle
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.inspection import permutation_importance
@@ -73,6 +75,34 @@ def load_model():
 
 knn = load_model()
 
+metrics_model = pd.DataFrame({'Metric': ['Train Accuracy', 'Test Accuracy', 'Train ROC AUC', 'Test ROC AUC', 'Train Precision', 'Test Precision', 'Train Recall', 'Test Recall', 'Train F1 Score', 'Test F1 Score', 'Cross Validation Mean']})
+
+def evaluate_metrics(model, model_name):
+    cv_scores = cross_val_score(model, X, y, cv=50, scoring='accuracy')
+
+    y_train_pred = model.predict(X_train)
+    y_train_proba = model.predict_proba(X_train)
+    y_test_pred = model.predict(X_test)
+    y_test_proba = model.predict_proba(X_test)
+
+    train_accuracy = accuracy_score(y_train, y_train_pred)
+    train_roc_auc = roc_auc_score(y_train, y_train_proba, multi_class='ovr')
+    train_precision = precision_score(y_train, y_train_pred, average='macro')
+    train_recall = recall_score(y_train, y_train_pred, average='macro')
+    train_f1 = f1_score(y_train, y_train_pred, average='macro')
+
+    test_accuracy = accuracy_score(y_test, y_test_pred)
+    test_roc_auc = roc_auc_score(y_test, y_test_proba, multi_class='ovr')
+    test_precision = precision_score(y_test, y_test_pred, average='macro')
+    test_recall = recall_score(y_test, y_test_pred, average='macro')
+    test_f1 = f1_score(y_test, y_test_pred, average='macro')
+    
+    metrics_model[model_name] = [train_accuracy, test_accuracy, train_roc_auc, test_roc_auc, train_precision, test_precision, 
+                                 train_recall, test_recall, train_f1, test_f1, cv_scores.mean()]
+
+evaluate_metrics(knn, "KNN")
+st.dataframe(metrics_model.head())
+
 # Важность признаков
 st.write("### Важность признаков для модели KNN")
 result = permutation_importance(knn, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1)
@@ -85,6 +115,26 @@ ax.set_xlabel('Важность признаков')
 ax.set_ylabel('Признаки')
 ax.set_title('Важность признаков для модели KNN')
 st.pyplot(fig)
+
+st.write("### ROC-кривые для каждой категории ожирения")
+y_score = knn.predict_proba(X_test)
+n_classes = len(class_labels)
+colors = cycle(["aqua", "darkorange", "cornflowerblue", "red", "green", "purple", "brown"])
+fig, ax = plt.subplots(figsize=(10, 6))
+for i, color in zip(range(n_classes), colors):
+    fpr, tpr, _ = roc_curve(y_test == i, y_score[:, i])
+    roc_auc = auc(fpr, tpr)
+    ax.plot(fpr, tpr, color=color, lw=2, label=f'Класс {class_labels[i]} (AUC = {roc_auc:.2f})')
+
+ax.plot([0, 1], [0, 1], 'k--', lw=2)
+ax.set_xlim([0.0, 1.0])
+ax.set_ylim([0.0, 1.05])
+ax.set_xlabel('False Positive Rate')
+ax.set_ylabel('True Positive Rate')
+ax.set_title('ROC-кривые')
+ax.legend(loc="lower right")
+st.pyplot(fig)
+
 
 ## Человеческие названия классов
 class_labels = {
