@@ -101,7 +101,7 @@ knn = load_model()
 metrics_model = pd.DataFrame({'Metric': ['Train Accuracy', 'Test Accuracy', 'Train ROC AUC', 'Test ROC AUC', 'Train Precision', 'Test Precision', 'Train Recall', 'Test Recall', 'Train F1 Score', 'Test F1 Score', 'Cross Validation Mean']})
 
 def evaluate_metrics(model, model_name):
-    cv_scores = cross_val_score(model, X, y, cv=150, scoring='accuracy')
+    cv_scores = cross_val_score(model, X, y, cv=100, scoring='accuracy')
 
     y_train_pred = model.predict(X_train)
     y_train_proba = model.predict_proba(X_train)
