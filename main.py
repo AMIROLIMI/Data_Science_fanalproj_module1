@@ -48,10 +48,16 @@ data= load_data("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw
 st.write("### Данные до изменения")
 st.dataframe(data.head())
 
+import streamlit as st
+import pandas as pd
+import io
+
+# Основная информация о датасете
 st.write("## Основная информация о датасете")
-buffer = []
+
+buffer = io.StringIO()
 data.info(buf=buffer)
-info_str = "\n".join(buffer)
+info_str = buffer.getvalue()
 st.text(info_str)
 
 # Вывод формы (размерности) данных
@@ -67,7 +73,7 @@ st.dataframe(data.nunique().reset_index().rename(columns={"index": "Столбе
 
 # Уникальные значения в колонке "Obesity"
 st.write("### Уникальные классы в 'Obesity'")
-st.write(data["Obesity"].unique())
+st.write(", ".join(map(str, data["Obesity"].unique())))
 
 # Описание статистики данных
 st.write("### Описательная статистика данных")
@@ -76,6 +82,7 @@ st.dataframe(data.describe())
 # Список колонок
 st.write("### Список колонок в датасете")
 st.write(", ".join(data.columns))
+
 
 
 st.write("### Матрица корреляции до обработки данных")
