@@ -44,9 +44,9 @@ st.markdown("""
 def load_data(url):
     return pd.read_csv(url)
 
-data_raw = load_data("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/Obesity%20prediction.csv")
+data= load_data("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/Obesity%20prediction.csv")
 st.write("### Данные до изменения")
-st.dataframe(data_raw.head())
+st.dataframe(data.head())
 
 st.write("## Основная информация о датасете")
 buffer = []
