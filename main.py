@@ -86,21 +86,6 @@ ax.set_ylabel('Признаки')
 ax.set_title('Важность признаков для модели KNN')
 st.pyplot(fig)
 
-# Матрица ошибок
-st.write("### Матрица ошибок")
-y_pred = knn.predict(X_test)
-conf_matrix = confusion_matrix(y_test, y_pred)
-fig, ax = plt.subplots(figsize=(8, 6))
-sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=np.unique(y), yticklabels=np.unique(y))
-ax.set_xlabel("Предсказанный класс")
-ax.set_ylabel("Истинный класс")
-ax.set_title("Матрица ошибок")
-st.pyplot(fig)
-
-# Отчёт классификации
-st.write("### Отчёт классификации")
-st.text(classification_report(y_test, y_pred))
-
 # Форма для пользовательского ввода
 st.write("### Введите данные для предсказания")
 user_input = {}
