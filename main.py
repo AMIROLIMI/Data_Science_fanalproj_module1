@@ -75,7 +75,7 @@ knn = load_model()
 # Важность признаков
 st.write("### Важность признаков для модели KNN")
 st.image("https://raw.githubusercontent.com/AMIROLIMI/Data_Science_fanalproj_module1/main/feature_imp.png", 
-        use_container_width=True)
+         use_container_width=True)
 
 # Матрица ошибок
 st.write("### Матрица ошибок")
