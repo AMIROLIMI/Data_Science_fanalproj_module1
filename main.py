@@ -103,7 +103,7 @@ def evaluate_metrics(model, model_name):
                                  train_recall, test_recall, train_f1, test_f1, cv_scores.mean()]
 
 evaluate_metrics(knn, "KNN")
-st.dataframe(metrics_model.head())
+st.dataframe(metrics_model.head(11))
 
 # Важность признаков
 st.write("### Важность признаков для модели KNN")
@@ -118,15 +118,25 @@ ax.set_ylabel('Признаки')
 ax.set_title('Важность признаков для модели KNN')
 st.pyplot(fig)
 
+from sklearn.metrics import roc_curve, auc
+from itertools import cycle
+
 st.write("### ROC-кривые для каждой категории ожирения")
+
+# Получение вероятностей предсказаний
 y_score = knn.predict_proba(X_test)
-n_classes = len(class_labels)
+
+# Определение уникальных классов
+n_classes = len(np.unique(y_test))
 colors = cycle(["aqua", "darkorange", "cornflowerblue", "red", "green", "purple", "brown"])
+
 fig, ax = plt.subplots(figsize=(10, 6))
+
+# Построение ROC-кривых
 for i, color in zip(range(n_classes), colors):
     fpr, tpr, _ = roc_curve(y_test == i, y_score[:, i])
     roc_auc = auc(fpr, tpr)
-    ax.plot(fpr, tpr, color=color, lw=2, label=f'Класс {class_labels[i]} (AUC = {roc_auc:.2f})')
+    ax.plot(fpr, tpr, color=color, lw=2, label=f'Класс {class_labels.get(i, i)} (AUC = {roc_auc:.2f})')
 
 ax.plot([0, 1], [0, 1], 'k--', lw=2)
 ax.set_xlim([0.0, 1.0])
@@ -135,7 +145,9 @@ ax.set_xlabel('False Positive Rate')
 ax.set_ylabel('True Positive Rate')
 ax.set_title('ROC-кривые')
 ax.legend(loc="lower right")
+
 st.pyplot(fig)
+
 
 
 ## Человеческие названия классов
