@@ -7,41 +7,20 @@ import joblib
 from sklearn.preprocessing import StandardScaler
 from sklearn.inspection import permutation_importance
 
-# Заголовок
-st.title("Анализ данных и классификация ожирения")
+st.title("Классификация ожирения")
 
-# Загрузка данных
-@st.cache_data
-def load_data():
-    url = "https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/Obesity%20prediction.csv"
-    data = pd.read_csv(url)
-    data.drop(columns=["Weight", "SMOKE"], inplace=True)
-    col = ["family_history", "FAVC", "SCC"]
-    data[col] = data[col].replace({'yes': 1, 'no': 0})
-    data["Gender"] = data["Gender"].replace({'Male': 1, 'Female': 0})
-    data["Obesity"] = data["Obesity"].replace({
-        'Insufficient_Weight': 0, 'Normal_Weight': 1, 'Overweight_Level_I': 2, 'Overweight_Level_II': 3,
-        'Obesity_Type_I': 4, 'Obesity_Type_II': 5, 'Obesity_Type_III': 6
-    })
-    return data
-
-data = load_data()
+data = pd.read_csv("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/blob/main/Encoded%20Standardized%20Obesity%20prediction.csv")
 st.write("### Первые 5 строк данных:")
 st.dataframe(data.head())
 
-# Разделение данных
 X = data.drop(columns=["Obesity"])
 y = data["Obesity"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
-# Загрузка обученной модели
-@st.cache_resource
-def load_model():
-    model_url = "https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/knn_model.pkl"
-    return joblib.load(model_url)
-
-knn = load_model()
+knn = joblib.load("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/knn_model.pkl")
 
 # Визуализация корреляционной матрицы
 st.write("### Корреляционная матрица")
@@ -49,7 +28,6 @@ fig, ax = plt.subplots(figsize=(15, 12))
 sns.heatmap(data.corr(), annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5, ax=ax)
 st.pyplot(fig)
 
-# Анализ важности признаков
 st.write("### Важность признаков для модели KNN")
 result = permutation_importance(knn, X_scaled, y, n_repeats=10, random_state=42, n_jobs=-1)
 importance = result.importances_mean
