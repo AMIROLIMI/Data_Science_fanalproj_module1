@@ -47,6 +47,37 @@ def load_data(url):
 data_raw = load_data("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/Obesity%20prediction.csv")
 st.write("### Данные до изменения")
 st.dataframe(data_raw.head())
+
+st.write("## Основная информация о датасете")
+buffer = []
+data.info(buf=buffer)
+info_str = "\n".join(buffer)
+st.text(info_str)
+
+# Вывод формы (размерности) данных
+st.write(f"### Размерность данных: {data.shape[0]} строк, {data.shape[1]} колонок")
+
+# Подсчёт пропущенных значений
+st.write("### Количество пропущенных значений в каждом столбце")
+st.dataframe(data.isna().sum().reset_index().rename(columns={"index": "Столбец", 0: "Пропущенные значения"}))
+
+# Уникальные значения в каждом столбце
+st.write("### Количество уникальных значений в каждом столбце")
+st.dataframe(data.nunique().reset_index().rename(columns={"index": "Столбец", 0: "Уникальные значения"}))
+
+# Уникальные значения в колонке "Obesity"
+st.write("### Уникальные классы в 'Obesity'")
+st.write(data["Obesity"].unique())
+
+# Описание статистики данных
+st.write("### Описательная статистика данных")
+st.dataframe(data.describe())
+
+# Список колонок
+st.write("### Список колонок в датасете")
+st.write(", ".join(data.columns))
+
+
 st.write("### Матрица корреляции до обработки данных")
 st.image("https://raw.githubusercontent.com/AMIROLIMI/Data_Science_fanalproj_module1/main/CORR_before.png", 
          use_container_width=True)
