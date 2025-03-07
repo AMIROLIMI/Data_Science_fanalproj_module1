@@ -39,28 +39,25 @@ st.markdown("""
 def load_data(url):
     return pd.read_csv(url)
 
-# Загрузка данных до обработки
 data_raw = load_data("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/Obesity%20prediction.csv")
 st.write("### Данные до изменения")
 st.dataframe(data_raw.head())
+st.write("### Матрица корреляции до обработки данных")
 st.image("https://raw.githubusercontent.com/AMIROLIMI/Data_Science_fanalproj_module1/main/CORR_before.png", 
          caption="Описание изображения", use_container_width=True)
 
-
-# Загрузка обработанных данных
 data = load_data("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/Encoded%20Standardized%20Obesity%20prediction.csv")
 data = data.drop(columns=["Unnamed: 0"])
 st.write("### Данные после изменения")
 st.dataframe(data.head())
+st.write("### Матрица корреляции после обработки данных")
 st.image("https://raw.githubusercontent.com/AMIROLIMI/Data_Science_fanalproj_module1/main/CORR_after.png", 
          caption="Описание изображения", use_container_width=True)
 
-# Разделение данных
 X = data.drop(columns=["Obesity"])
 y = data["Obesity"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
 
-# Нормализация данных
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
@@ -77,16 +74,9 @@ knn = load_model()
 
 # Важность признаков
 st.write("### Важность признаков для модели KNN")
-result = permutation_importance(knn, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1)
-importance = result.importances_mean
-feature_importance = pd.DataFrame({'Feature': X.columns, 'Importance': importance}).sort_values(by='Importance', ascending=True)
+st.image("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/blob/main/feature_imp.png", 
+         caption="Описание изображения", use_container_width=True)
 
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.barh(feature_importance['Feature'], feature_importance['Importance'], color='skyblue')
-ax.set_xlabel('Важность признаков')
-ax.set_ylabel('Признаки')
-ax.set_title('Важность признаков для модели KNN')
-st.pyplot(fig)
 
 # Матрица ошибок
 st.write("### Матрица ошибок")
