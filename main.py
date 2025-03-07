@@ -23,6 +23,7 @@ st.dataframe(data_raw.head())
 
 # Загрузка обработанных данных
 data = load_data("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/Encoded%20Standardized%20Obesity%20prediction.csv")
+data = data.drop(columns=["Unnamed: 0"])
 st.write("### Данные после изменения")
 st.dataframe(data.head())
 
