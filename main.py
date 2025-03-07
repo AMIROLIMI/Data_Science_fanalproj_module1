@@ -74,3 +74,43 @@ def load_model():
     return joblib.load(model_path)
 
 knn = load_model()
+
+# Важность признаков
+st.write("### Важность признаков для модели KNN")
+result = permutation_importance(knn, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1)
+importance = result.importances_mean
+feature_importance = pd.DataFrame({'Feature': X.columns, 'Importance': importance}).sort_values(by='Importance', ascending=True)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.barh(feature_importance['Feature'], feature_importance['Importance'], color='skyblue')
+ax.set_xlabel('Важность признаков')
+ax.set_ylabel('Признаки')
+ax.set_title('Важность признаков для модели KNN')
+st.pyplot(fig)
+
+# Матрица ошибок
+st.write("### Матрица ошибок")
+y_pred = knn.predict(X_test)
+conf_matrix = confusion_matrix(y_test, y_pred)
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=np.unique(y), yticklabels=np.unique(y))
+ax.set_xlabel("Предсказанный класс")
+ax.set_ylabel("Истинный класс")
+ax.set_title("Матрица ошибок")
+st.pyplot(fig)
+
+# Отчёт классификации
+st.write("### Отчёт классификации")
+st.text(classification_report(y_test, y_pred))
+
+# Форма для пользовательского ввода
+st.write("### Введите данные для предсказания")
+user_input = {}
+for col in X.columns:
+    user_input[col] = st.number_input(f"{col}", float(data[col].min()), float(data[col].max()), float(data[col].mean()))
+
+if st.button("Предсказать"):
+    user_df = pd.DataFrame([user_input])
+    user_scaled = scaler.transform(user_df)
+    prediction = knn.predict(user_scaled)
+    st.success(f"Предсказанный класс ожирения: {prediction[0]}")
