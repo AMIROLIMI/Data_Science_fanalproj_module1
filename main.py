@@ -118,18 +118,19 @@ ax.set_ylabel('Признаки')
 ax.set_title('Важность признаков для модели KNN')
 st.pyplot(fig)
 
-from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import roc_curve, auc, roc_auc_score
 from itertools import cycle
+import numpy as np
 
 # Определение меток классов
 class_labels = {
-    0: 'Класс 0',
-    1: 'Класс 1',
-    2: 'Класс 2',
-    3: 'Класс 3',
-    4: 'Класс 4',
-    5: 'Класс 5',
-    6: 'Класс 6'
+    0: "Недостаточный вес",
+    1: "Нормальный вес",
+    2: "Избыточный вес I уровня",
+    3: "Избыточный вес II уровня",
+    4: "Ожирение I типа",
+    5: "Ожирение II типа",
+    6: "Ожирение III типа"
 }
 
 st.write("### ROC-кривые для каждой категории ожирения")
@@ -138,17 +139,22 @@ st.write("### ROC-кривые для каждой категории ожире
 y_score = knn.predict_proba(X_test)
 
 # Определение уникальных классов
-n_classes = 7  # Изменено на 7
+n_classes = 7
 colors = cycle(["aqua", "darkorange", "cornflowerblue", "red", "green", "purple", "brown"])
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Построение ROC-кривых
+# Построение ROC-кривых и AUC для каждого класса
 for i, color in zip(range(n_classes), colors):
     fpr, tpr, _ = roc_curve(y_test == i, y_score[:, i])
     roc_auc = auc(fpr, tpr)
-    ax.plot(fpr, tpr, color=color, lw=2, label=f'Класс {class_labels.get(i, i)} (AUC = {roc_auc:.2f})')
+    ax.plot(fpr, tpr, color=color, lw=2, label=f'{class_labels.get(i, i)} (AUC = {roc_auc:.2f})')
 
+# Расчет усредненного ROC AUC
+average_auc = roc_auc_score(y_test, y_score, multi_class='ovr')
+st.write(f'### Усредненный ROC AUC: {average_auc:.2f}')
+
+# Добавление диагональной линии (случайный предсказатель)
 ax.plot([0, 1], [0, 1], 'k--', lw=2)
 ax.set_xlim([0.0, 1.0])
 ax.set_ylim([0.0, 1.05])
@@ -161,17 +167,6 @@ st.pyplot(fig)
 
 
 
-
-## Человеческие названия классов
-class_labels = {
-    0: "Недостаточный вес",
-    1: "Нормальный вес",
-    2: "Избыточный вес I уровня",
-    3: "Избыточный вес II уровня",
-    4: "Ожирение I типа",
-    5: "Ожирение II типа",
-    6: "Ожирение III типа"
-}
 
 # Ввод данных пользователем
 st.write("### Введите данные для предсказания")
