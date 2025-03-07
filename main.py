@@ -69,11 +69,6 @@ st.markdown("\n".join(f"- {col}" for col in data["Obesity"].unique()))
 st.write("### Описательная статистика данных")
 st.dataframe(data.describe())
 
-st.write("### Список колонок в датасете")
-st.markdown("\n".join(f"- {col}" for col in data.columns))
-
-
-
 st.write("### Матрица корреляции до обработки данных")
 st.image("https://raw.githubusercontent.com/AMIROLIMI/Data_Science_fanalproj_module1/main/CORR_before.png", 
          use_container_width=True)
@@ -162,27 +157,17 @@ class_labels = {
 }
 
 st.write("### ROC-кривые для каждой категории ожирения")
-
-# Получение вероятностей предсказаний
 y_score = knn.predict_proba(X_test)
-
-# Определение уникальных классов
 n_classes = 7
 colors = cycle(["aqua", "darkorange", "cornflowerblue", "red", "green", "purple", "brown"])
-
 fig, ax = plt.subplots(figsize=(10, 6))
-
-# Построение ROC-кривых и AUC для каждого класса
 for i, color in zip(range(n_classes), colors):
     fpr, tpr, _ = roc_curve(y_test == i, y_score[:, i])
     roc_auc = auc(fpr, tpr)
     ax.plot(fpr, tpr, color=color, lw=2, label=f'{class_labels.get(i, i)} (AUC = {roc_auc:.2f})')
 
-# Расчет усредненного ROC AUC
 average_auc = roc_auc_score(y_test, y_score, multi_class='ovr')
 st.write(f'### Усредненный ROC AUC: {average_auc:.2f}')
-
-# Добавление диагональной линии (случайный предсказатель)
 ax.plot([0, 1], [0, 1], 'k--', lw=2)
 ax.set_xlim([0.0, 1.0])
 ax.set_ylim([0.0, 1.05])
@@ -190,13 +175,9 @@ ax.set_xlabel('False Positive Rate')
 ax.set_ylabel('True Positive Rate')
 ax.set_title('ROC-кривые')
 ax.legend(loc="lower right")
-
 st.pyplot(fig)
 
 
-
-
-# Ввод данных пользователем
 st.write("### Введите данные для предсказания")
 user_input = {}
 gender_map = {"Мужчина": 1, "Женщина": 0}
