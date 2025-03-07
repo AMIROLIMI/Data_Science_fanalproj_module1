@@ -103,6 +103,7 @@ def evaluate_metrics(model, model_name):
                                  train_recall, test_recall, train_f1, test_f1, cv_scores.mean()]
 
 evaluate_metrics(knn, "KNN")
+st.write("### Метрики модели KNN")
 st.dataframe(metrics_model.head(11))
 
 # Важность признаков
