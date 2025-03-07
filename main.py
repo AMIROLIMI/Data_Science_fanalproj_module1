@@ -89,7 +89,6 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-# Функция для загрузки модели
 @st.cache_resource
 def load_model():
     model_url = "https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/knn_model.pkl"
@@ -102,7 +101,7 @@ knn = load_model()
 metrics_model = pd.DataFrame({'Metric': ['Train Accuracy', 'Test Accuracy', 'Train ROC AUC', 'Test ROC AUC', 'Train Precision', 'Test Precision', 'Train Recall', 'Test Recall', 'Train F1 Score', 'Test F1 Score', 'Cross Validation Mean']})
 
 def evaluate_metrics(model, model_name):
-    cv_scores = cross_val_score(model, X, y, cv=50, scoring='accuracy')
+    cv_scores = cross_val_score(model, X, y, cv=150, scoring='accuracy')
 
     y_train_pred = model.predict(X_train)
     y_train_proba = model.predict_proba(X_train)
@@ -128,7 +127,6 @@ evaluate_metrics(knn, "KNN")
 st.write("### Метрики модели KNN")
 st.dataframe(metrics_model.head(11))
 
-# Важность признаков
 st.write("### Важность признаков для модели KNN")
 result = permutation_importance(knn, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1)
 importance = result.importances_mean
@@ -143,9 +141,7 @@ st.pyplot(fig)
 
 from sklearn.metrics import roc_curve, auc, roc_auc_score
 from itertools import cycle
-import numpy as np
 
-# Определение меток классов
 class_labels = {
     0: "Недостаточный вес",
     1: "Нормальный вес",
