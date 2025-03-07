@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.inspection import permutation_importance
 
 st.title("Классификация ожирения")
-
+@st.cache_data
 data = pd.read_csv("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/blob/main/Encoded%20Standardized%20Obesity%20prediction.csv")
 st.write("### Первые 5 строк данных:")
 st.dataframe(data.head())
@@ -19,7 +19,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
-
+@st.cache_resource
 knn = joblib.load("https://github.com/AMIROLIMI/Data_Science_fanalproj_module1/raw/main/knn_model.pkl")
 
 # Визуализация корреляционной матрицы
