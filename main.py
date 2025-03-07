@@ -44,7 +44,7 @@ data_raw = load_data("https://github.com/AMIROLIMI/Data_Science_fanalproj_module
 st.write("### Данные до изменения")
 st.dataframe(data_raw.head())
 st.image("https://raw.githubusercontent.com/AMIROLIMI/Data_Science_fanalproj_module1/main/CORR_before.png", 
-         caption="Описание изображения", use_column_width=True)
+         caption="Описание изображения", use_container_width=True)
 
 
 # Загрузка обработанных данных
@@ -53,7 +53,7 @@ data = data.drop(columns=["Unnamed: 0"])
 st.write("### Данные после изменения")
 st.dataframe(data.head())
 st.image("https://raw.githubusercontent.com/AMIROLIMI/Data_Science_fanalproj_module1/main/CORR_after.png", 
-         caption="Описание изображения", use_column_width=True)
+         caption="Описание изображения", use_container_width=True)
 
 # Разделение данных
 X = data.drop(columns=["Obesity"])
