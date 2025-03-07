@@ -99,58 +99,32 @@ class_labels = {
 
 # Ввод данных пользователем
 st.write("### Введите данные для предсказания")
-
 user_input = {}
-
-# Пол
 gender_map = {"Мужчина": 1, "Женщина": 0}
-gender_choice = st.radio("Пол", list(gender_map.keys()))
+gender_choice = st.radio("Пол (Gender)", list(gender_map.keys()))
 user_input["Gender"] = gender_map[gender_choice]
-
-# Возраст
-user_input["Age"] = st.slider("Возраст", min_value=10, max_value=80, value=30)
-
-# Рост
-user_input["Height"] = st.slider("Рост (м)", min_value=1.2, max_value=2.2, value=1.7)
-
-# Семейная история ожирения (Да/Нет)
+user_input["Age"] = st.slider("Возраст (Age)", min_value=10, max_value=80, value=30)
+user_input["Height"] = st.slider("Рост (Height)", min_value=1.2, max_value=2.2, value=1.7)
 binary_map = {"Да": 1, "Нет": 0}
-user_input["family_history"] = binary_map[st.radio("Есть ли у семьи история ожирения?", list(binary_map.keys()))]
+user_input["family_history"] = binary_map[st.radio("Есть ли у семьи история ожирения? (family_history)", list(binary_map.keys()))]
 
-# Часто ли вы едите высококалорийную пищу? (Да/Нет)
-user_input["FAVC"] = binary_map[st.radio("Часто ли едите высококалорийную пищу?", list(binary_map.keys()))]
-
-# Употребление овощей (0-3)
-user_input["FCVC"] = st.slider("Как часто вы едите овощи?", 0.0, 3.0, 1.5)
-
-# Основные приемы пищи в день (1-4)
-user_input["NCP"] = st.slider("Сколько основных приемов пищи у вас в день?", 1.0, 4.0, 3.0)
-
-# Еда между приемами пищи (Категории)
+user_input["FAVC"] = binary_map[st.radio("Часто ли едите высококалорийную пищу? (FAVC)", list(binary_map.keys()))]
+user_input["FCVC"] = st.slider("Как часто вы едите овощи? (FCVC)", 0.0, 3.0, 1.5)
+user_input["NCP"] = st.slider("Сколько основных приемов пищи у вас в день? (NCP)", 1.0, 4.0, 3.0)
 caec_options = {"Никогда": 0, "Редко": 1, "Иногда": 2, "Часто": 3}
-user_input["CAEC"] = caec_options[st.selectbox("Едите ли вы между приемами пищи?", list(caec_options.keys()))]
 
-# Сколько воды вы пьете ежедневно? (0-3)
-user_input["CH2O"] = st.slider("Сколько воды пьете ежедневно? (литры)", 0.0, 3.0, 1.5)
+user_input["CAEC"] = caec_options[st.selectbox("Едите ли вы между приемами пищи? (CAEC)", list(caec_options.keys()))]
+user_input["CH2O"] = st.slider("Сколько воды пьете ежедневно? (литры) (CH2O)", 0.0, 3.0, 1.5)
+user_input["SCC"] = binary_map[st.radio("Контролируете ли калории? (SCC)", list(binary_map.keys()))]
+user_input["FAF"] = st.slider("Как часто занимаетесь физической активностью? (FAF)", 0.0, 3.0, 1.0)
+user_input["TUE"] = st.slider("Сколько времени проводите за гаджетами (часы)? (TUE)", 0.0, 2.0, 1.0)
 
-# Контроль калорий (Да/Нет)
-user_input["SCC"] = binary_map[st.radio("Контролируете ли калории?", list(binary_map.keys()))]
-
-# Физическая активность (0-3)
-user_input["FAF"] = st.slider("Как часто занимаетесь физической активностью?", 0.0, 3.0, 1.0)
-
-# Время перед экранами (0-2)
-user_input["TUE"] = st.slider("Сколько времени проводите за гаджетами (часы)?", 0.0, 2.0, 1.0)
-
-# Употребление алкоголя (Категории)
 calc_options = {"Никогда": 0, "Редко": 1, "Иногда": 2, "Часто": 3}
-user_input["CALC"] = calc_options[st.selectbox("Как часто употребляете алкоголь?", list(calc_options.keys()))]
+user_input["CALC"] = calc_options[st.selectbox("Как часто употребляете алкоголь? (CALC)", list(calc_options.keys()))]
 
-# Тип транспорта (Категории)
 mtrans_options = {"Авто": 0, "Мотоцикл": 1, "Байк": 2, "Пешком": 3, "Общественный транспорт": 4}
-user_input["MTRANS"] = mtrans_options[st.selectbox("Какой транспорт используете чаще всего?", list(mtrans_options.keys()))]
+user_input["MTRANS"] = mtrans_options[st.selectbox("Какой транспорт используете чаще всего? (MTRANS)", list(mtrans_options.keys()))]
 
-# Кнопка предсказания
 if st.button("Предсказать"):
     user_df = pd.DataFrame([user_input])
     user_scaled = scaler.transform(user_df)
